@@ -42,7 +42,7 @@ namespace sst_core.Core
                 if (Dbdata.Count() > 0)
                 {
                     Dbdata?.All(x =>
-                {                     
+                {
                     var servicesInfo = new PatientsResponse(x);
                     services.Add(servicesInfo);
                     return true;
@@ -77,16 +77,24 @@ namespace sst_core.Core
 
             try
             {
-                var data = await _companyData.GetSpecific(input.TypeDocument, input.Document);
-                if (!data)
+                if (input.Id == 0)
                 {
-                    input.UserId = this._configuration["User:User"];
-                    int serviceId = _companyData.UpsertDynamic(input);
+                    var data = await _companyData.GetSpecific(input.TypeDocument, input.Document);
+                    if (!data)
+                    {
+                        input.UserId = this._configuration["User:User"];
+                        int serviceId = _companyData.UpsertDynamic(input);
+                    }
+                    else
+                    {
+                        oReturn.Message = "El registro ya se encuentra dentro del sistema, por favor validar. ";
+                        oReturn.Status = (int)Enumerations.enumTypeMessageResponse.BadRequest;
+                    }
                 }
                 else
                 {
-                    oReturn.Message = "El registro ya se encuentra dentro del sistema, por favor validar. ";
-                    oReturn.Status = (int)Enumerations.enumTypeMessageResponse.BadRequest;
+                    input.UserId = this._configuration["User:User"];
+                    int serviceId = _companyData.UpsertDynamic(input);
                 }
             }
             catch (Exception ex)
