@@ -1,0 +1,25 @@
+﻿using StoreSample.Domain.Model.Dto;
+using StoreSample.Domain.Model.General;
+
+namespace sst_core.Core
+{
+    public interface IProviderCore
+    {
+        #region Get
+
+        /// <summary>
+        /// Get  list
+        /// </summary>
+        /// <returns>List<UserDto> </returns>
+        Task<GeneralResponse> GetAll();
+
+        /// <summary>
+        /// Create or Update
+        /// </summary>
+        /// <param name="input">UserDto</param>
+        /// <returns> List<UserDto></returns>
+        Task<GeneralResponse> Upsert(ProviderRequest input);
+
+        #endregion
+    }
+}
