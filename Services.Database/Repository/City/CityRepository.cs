@@ -22,7 +22,7 @@ namespace sst_database.sst_database.DbCore
         {
             try
             {
-                return await _DbContext.Countries.ToListAsync();
+                return await _DbContext.Cities.ToListAsync();
             }
             catch (Exception ex)
             {
@@ -38,7 +38,7 @@ namespace sst_database.sst_database.DbCore
         {
             try
             {
-                return await _DbContext.Countries.AnyAsync(x => x.IsoCode == isoCode);
+                return await _DbContext.Cities.AnyAsync(x => x.IsoCode == isoCode);
             }
             catch (Exception ex)
             {
@@ -51,17 +51,17 @@ namespace sst_database.sst_database.DbCore
         /// </summary>
         /// <param name="input"></param>
         /// <returns>List<DynamicFormDto></returns>
-        public void UpsertDynamic(CountryRequest input)
+        public void UpsertDynamic(CityRequest input)
         {
             try
             {
 
-                if (input.CountryId == 0)
+                if (input.CityId == 0)
                 {
                     City insertDb = new City()
                     {
                         IsoCode = input.IsoCode,
-                        CountryId = input.CountryId,
+                        CityId = input.CityId,
                         Name = input.Name,
                         CreatedDate = DateTime.Now,
                         UpdatedDate = DateTime.Now,
@@ -69,12 +69,12 @@ namespace sst_database.sst_database.DbCore
                         CreatedBy = input.UserId,
                         UpdatedBy = input.UserId
                     };
-                    _DbContext.Countries.Add(insertDb);
+                    _DbContext.Cities.Add(insertDb);
                     _DbContext.SaveChanges();
                 }
                 else
                 {
-                    var recordDb = _DbContext.Countries.Where(x => x.CountryId == input.CountryId).FirstOrDefault();
+                    var recordDb = _DbContext.Cities.Where(x => x.CityId == input.CityId).FirstOrDefault();
                     recordDb.Enabled = input.Enabled;
                     recordDb.UpdatedDate = DateTime.Now;
 

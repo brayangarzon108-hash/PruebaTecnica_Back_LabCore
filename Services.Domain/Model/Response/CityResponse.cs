@@ -3,13 +3,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace StoreSample.Domain.Model.Dto
 {
-    public class CountryResponse
+    public class CityResponse
     {
-        public CountryResponse(City data)
+        public CityResponse(City data)
         {
             if (data != null)
             {
-                CountryId = data.CountryId;
+                CityId = data.CityId;
                 IsoCode = data.IsoCode;
                 Name = data.Name;
                 UserId = data.UpdatedBy;
@@ -17,11 +17,11 @@ namespace StoreSample.Domain.Model.Dto
             }
         }
 
-        public CountryResponse()
+        public CityResponse()
         {
         }
 
-        public int CountryId { get; set; }
+        public int CityId { get; set; }
         public string IsoCode { get; set; }
         public string Name { get; set; }
         public string? UserId { get; set; }

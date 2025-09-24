@@ -18,11 +18,33 @@ namespace sst_database.sst_database.DbCore
         /// Get list
         /// </summary>
         /// <returns>List<CatalogDto> </returns>
-        public async Task<List<Patients>> GetAll(int providerId)
+        public async Task<List<Patients>> GetAll(string document)
         {
             try
             {
-                return await _DbContext.Services.Where(x => x.ProviderId == providerId).ToListAsync();
+                var data = _DbContext.Patients.AsEnumerable();
+
+                if (string.IsNullOrEmpty(document)) {
+                    data = data.Where(x => x.Document.Contains(document));
+                }
+
+                return data.ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// Get list
+        /// </summary>
+        /// <returns>List<CatalogDto> </returns>
+        public async Task<bool> GetSpecific(int typeDocument, string document)
+        {
+            try
+            {
+                return await _DbContext.Patients.Where(x => x.TypeDocument == typeDocument && x.Document == document).AnyAsync();
             }
             catch (Exception ex)
             {
@@ -36,40 +58,47 @@ namespace sst_database.sst_database.DbCore
         /// </summary>
         /// <param name="input"></param>
         /// <returns>List<DynamicFormDto></returns>
-        public int UpsertDynamic(ServiceRequest input)
+        public int UpsertDynamic(PatientsRequest input)
         {
             try
             {
 
-                if (input.ServiceId == 0)
+                if (input.Id == 0)
                 {
                     Patients insertDb = new Patients()
                     {
-                        ServiceId = input.ServiceId,
-                        ProviderId = input.ProviderId,
+                        Id = input.Id,
+                        CityId = input.CityId,
+                        LastName = input.LastName,
                         Name = input.Name,
-                        HourlyRate = input.HourlyRate,
+                        BirthDate = input.BirthDate,
+                        Phone = input.Phone,
+                        Email = input.Email,
                         CreatedDate = DateTime.Now,
                         UpdatedDate = DateTime.Now,
                         Enabled = input.Enabled,
                         CreatedBy = input.UserId,
                         UpdatedBy = input.UserId
                     };
-                    _DbContext.Services.Add(insertDb);
+                    _DbContext.Patients.Add(insertDb);
                     _DbContext.SaveChanges();
                 }
                 else
                 {
-                    var recordDb = _DbContext.Services.Where(x => x.ServiceId == input.ServiceId).FirstOrDefault();
+                    var recordDb = _DbContext.Patients.Where(x => x.Id == input.Id).FirstOrDefault();
                     recordDb.Enabled = input.Enabled;
                     recordDb.Name = input.Name;
-                    recordDb.HourlyRate = input.HourlyRate;
+                    recordDb.LastName = input.LastName;
+                    recordDb.BirthDate = input.BirthDate;
+                    recordDb.CityId = input.CityId;
+                    recordDb.Phone = input.Phone;
+                    recordDb.Email = input.Email;
                     recordDb.UpdatedDate = DateTime.Now;
 
                     _DbContext.SaveChanges();
                 }
 
-                return _DbContext.Services.Where(x => x.ProviderId == input.ProviderId).Max(x => x.ServiceId);
+                return _DbContext.Patients.Where(x => x.Id == input.Id).Max(x => x.Id);
             }
             catch (Exception ex)
             {

@@ -1,12 +1,12 @@
 ﻿namespace StoreSample.Domain.Model.Dto
 {
-    public class CountryRequest
+    public class CityRequest
     {
-        public CountryRequest()
+        public CityRequest()
         {
         }
 
-        public int CountryId { get; set; }
+        public int CityId { get; set; }
         public string IsoCode { get; set; }
         public string Name { get; set; }
         public string? UserId { get; set; }       

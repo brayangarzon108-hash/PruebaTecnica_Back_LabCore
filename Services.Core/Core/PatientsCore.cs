@@ -6,24 +6,21 @@ using StoreSample.Domain.Model.General;
 
 namespace sst_core.Core
 {
-    public class ProviderCore : IProviderCore
+    public class PatientsCore : IPatientsCore
     {
         private readonly IConfiguration _configuration;
-        private readonly IProviderRepository _companyData;
-        private readonly IProviderCustomFieldRepository _fieldsData;
-        private readonly ILogger<ProviderCore> _logger;
+        private readonly IPatientsRepository _companyData;
+        private readonly ILogger<PatientsCore> _logger;
 
-        public ProviderCore(
-            ILogger<ProviderCore> logger,
+        public PatientsCore(
+            ILogger<PatientsCore> logger,
             IConfiguration configuration,
-            IProviderRepository companyData,
-            IProviderCustomFieldRepository fieldsData
+            IPatientsRepository companyData
             )
         {
             _configuration = configuration;
             _logger = logger;
             _companyData = companyData;
-            _fieldsData = fieldsData;
         }
 
         #region Get
@@ -32,47 +29,32 @@ namespace sst_core.Core
         /// Get list
         /// </summary>
         /// <returns>List<UserDto> </returns>
-        public async Task<GeneralResponse> GetAll()
+        public async Task<GeneralResponse> GetAll(string document)
         {
             var oReturn = new GeneralResponse();
 
             try
             {
-                var dbdata = new List<ProviderResponse>();
+                var services = new List<PatientsResponse>();
 
-                var Dbase = await _companyData.GetAll();
+                var Dbdata = await _companyData.GetAll(document);
 
-                if (Dbase.Count() > 0)
+                if (Dbdata.Count() > 0)
                 {
-                    Dbase?.All(x =>
+                    Dbdata?.All(x =>
                 {
-                    var dataInfo = new ProviderResponse(x);
-                    dataInfo.CustomFields = new List<ProviderCustomFieldResponse>();
-
-                    var dataFields = _fieldsData.GetAll(x.ProviderId);
-                    if (dataFields.Result.Count() > 0)
-                    {
-                        dataInfo.CustomFields = dataFields.Result.Select(x => new ProviderCustomFieldResponse
-                        {
-                            CustomFieldId = x.CustomFieldId,
-                            FieldName = x.FieldName,
-                            FieldValue = x.FieldValue,
-                            Enabled = x.Enabled
-                        }).ToList();
-                    }
-
-                    dbdata.Add(dataInfo);
+                    var servicesInfo = new PatientsResponse(x);
+                    services.Add(servicesInfo);
                     return true;
                 });
-                    oReturn.Data = dbdata;
+
+                    oReturn.Data = services;
                 }
                 else
                 {
                     oReturn.Message = "No se encontraron registros seleccionados";
                     oReturn.Status = (int)Enumerations.enumTypeMessageResponse.NotFound;
                 }
-
-
             }
             catch (Exception ex)
             {
@@ -89,26 +71,17 @@ namespace sst_core.Core
         /// </summary>
         /// <param name="input">UserDto</param>
         /// <returns> List<UserDto></returns>
-        public async Task<GeneralResponse> Upsert(ProviderRequest input)
+        public async Task<GeneralResponse> Upsert(PatientsRequest input)
         {
             var oReturn = new GeneralResponse();
 
             try
             {
-                var data = await _companyData.GetAll();
-                if (!data.Any(x => x.TaxId == input.TaxId))
+                var data = await _companyData.GetSpecific(input.TypeDocument, input.Document);
+                if (!data)
                 {
-                    int providerId = _companyData.UpsertDynamic(input);
-
-                    // Creacion de campos automáticos
-                    if (providerId > 0 && input.dynamicFields != null && input.dynamicFields.Count() > 0)
-                    {
-                        foreach (var field in input.dynamicFields)
-                        {
-                            field.ProviderId = providerId;
-                            _fieldsData.UpsertDynamic(field);
-                        }
-                    }
+                    input.UserId = this._configuration["User:User"];
+                    int serviceId = _companyData.UpsertDynamic(input);
                 }
                 else
                 {

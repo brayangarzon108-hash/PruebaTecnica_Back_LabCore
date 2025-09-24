@@ -7,29 +7,30 @@ using StoreSample.Domain.Model.General;
 namespace services_backend.Controllers
 {
     [Route("api/[controller]")]
-    public class ServicesController : ControllerBase
+    [Authorize]
+    public class CityController : ControllerBase
     {
-        private readonly IServiceCore _Core;
-        private readonly ILogger<ServicesController> _logger;
+        private readonly ICityCore _Core;
+        private readonly ILogger<CityController> _logger;
 
-        public ServicesController(IServiceCore Core, ILogger<ServicesController> logger)
+        public CityController(ICityCore Core, ILogger<CityController> logger)
         {
             _Core = Core;
             _logger = logger;
         }
 
         /// <summary>
-        /// Get result 
+        /// Get result
         /// </summary>
         /// <param name="input"></param>
         /// <returns>List<DynamicFieldModel></returns>
         [HttpGet]
-        [Route("GetAllServices")]
-        public async Task<ActionResult<GeneralResponse>> GetAllServices(int providerId)
+        [Route("GetAllCountry")]
+        public async Task<ActionResult<GeneralResponse>> GetAllCountry()
         {
             try
             {
-                var data = await _Core.GetAll(providerId);
+                var data = await _Core.GetAll();
                 return StatusCode(data.Status, data);
             }
             catch (Exception ex)
@@ -44,13 +45,13 @@ namespace services_backend.Controllers
         /// </summary>
         /// <param name="dataInfo"></param>
         /// <returns>List<DynamicFieldModel></returns>
-        [HttpPost]
-        [Route("UpsertServices")]
-        public async Task<ActionResult<GeneralResponse>> UpsertServices([FromBody] ServiceRequest dataInfo)
+        [HttpGet]
+        [Route("UpsertCountry")]
+        public async Task<ActionResult<GeneralResponse>> UpsertCountry()
         {
             try
             {
-                var data = await _Core.Upsert(dataInfo);
+                var data = await _Core.Upsert();
                 return StatusCode(data.Status, data);
             }
             catch (Exception ex)

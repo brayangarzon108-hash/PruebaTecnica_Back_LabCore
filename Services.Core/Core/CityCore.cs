@@ -3,19 +3,20 @@ using Microsoft.Extensions.Logging;
 using sst_database.sst_database.DbCore;
 using StoreSample.Domain.Model.Dto;
 using StoreSample.Domain.Model.General;
+using System.Text.Json;
 
-namespace Tenkus_core.Core
+namespace sst_core.Core
 {
-    public class ProviderCustomFieldCore : IProviderCustomFieldCore
+    public class CityCore : ICityCore
     {
         private readonly IConfiguration _configuration;
-        private readonly IProviderCustomFieldRepository _companyData;
-        private readonly ILogger<ProviderCustomFieldCore> _logger;
+        private readonly ICityRepository _companyData;
+        private readonly ILogger<CityCore> _logger;
 
-        public ProviderCustomFieldCore(
-            ILogger<ProviderCustomFieldCore> logger,
+        public CityCore(
+            ILogger<CityCore> logger,
             IConfiguration configuration,
-            IProviderCustomFieldRepository companyData
+            ICityRepository companyData
             )
         {
             _configuration = configuration;
@@ -29,19 +30,19 @@ namespace Tenkus_core.Core
         /// Get list
         /// </summary>
         /// <returns>List<UserDto> </returns>
-        public async Task<GeneralResponse> GetAll(int providerId)
+        public async Task<GeneralResponse> GetAll()
         {
             var oReturn = new GeneralResponse();
 
             try
             {
-                var users = new List<ProviderCustomFieldResponse>();
+                var users = new List<CityResponse>();
 
-                var userDb = await _companyData.GetAll(providerId);
+                var userDb = await _companyData.GetAll();
 
                 userDb?.All(x =>
                 {
-                    users.Add(new ProviderCustomFieldResponse(x));
+                    users.Add(new CityResponse(x));
                     return true;
                 });
 
@@ -57,18 +58,42 @@ namespace Tenkus_core.Core
             return oReturn;
         }
 
+
         /// <summary>
         /// Create or Update
         /// </summary>
         /// <param name="input">UserDto</param>
         /// <returns> List<UserDto></returns>
-        public async Task<GeneralResponse> Upsert(ProviderCustomFieldRequest input)
+        public async Task<GeneralResponse> Upsert()
         {
             var oReturn = new GeneralResponse();
 
             try
             {
-                _companyData.UpsertDynamic(input);
+                // Extrac Info Service Country
+                using var client = new HttpClient();
+                var response = await client.GetStringAsync(this._configuration["ParametersGeneral:UrlCountry"].ToString());
+
+                var json = JsonDocument.Parse(response);
+
+                var paises = json.RootElement.EnumerateArray()
+                    .Select(p => new CityRequest
+                    {
+                        IsoCode = p.GetProperty("cca3").GetString(),
+                        Name = p.GetProperty("name").GetProperty("common").GetString(),
+                        Enabled = true,
+                        UserId = this._configuration["User:User"]
+                    })
+                    .ToList();
+
+                foreach (var pais in paises)
+                {
+                    var data = await _companyData.GetAllAny(pais.IsoCode);
+                    if (!data)
+                    {
+                        _companyData.UpsertDynamic(pais);
+                    }
+                }
             }
             catch (Exception ex)
             {

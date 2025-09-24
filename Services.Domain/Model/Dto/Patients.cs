@@ -61,9 +61,6 @@ namespace StoreSample.Domain.Model.Dto
         [Column("updateddate")]
         public DateTime? UpdatedDate { get; set; }
 
-        // Navigation properties
-        [ForeignKey("ProviderId")]
-        public virtual Item Provider { get; set; }
         [Column("Enabled")]
         public bool? Enabled { get; set; }
     }

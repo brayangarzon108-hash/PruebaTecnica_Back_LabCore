@@ -3,7 +3,7 @@ using StoreSample.Domain.Model.General;
 
 namespace sst_core.Core
 {
-    public interface IProviderCore
+    public interface ICityCore
     {
         #region Get
 
@@ -18,7 +18,7 @@ namespace sst_core.Core
         /// </summary>
         /// <param name="input">UserDto</param>
         /// <returns> List<UserDto></returns>
-        Task<GeneralResponse> Upsert(ProviderRequest input);
+       Task<GeneralResponse> Upsert();
 
         #endregion
     }

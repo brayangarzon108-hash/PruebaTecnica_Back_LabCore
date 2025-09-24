@@ -21,7 +21,7 @@ namespace sst_database.sst_database.DbCore
         /// </summary>
         /// <param name="input"></param>
         /// <returns>List<DynamicFormDto></returns>
-        void UpsertDynamic(CountryRequest input);
+        void UpsertDynamic(CityRequest input);
 
     }
 }

@@ -9,7 +9,6 @@ using NLog.Web;
 using sst_core.Core;
 using sst_database.sst_database.DbCore;
 using System.Text;
-using Tenkus_core.Core;
 using Tenkuscore.Core;
 
 
@@ -44,20 +43,12 @@ try
     #region AddTransient 
     builder.Services.AddTransient<IManagementCore, ManagementCore>();
 
-    builder.Services.AddTransient<ICountryCore, CountryCore>();
+    builder.Services.AddTransient<ICityCore, CityCore>();
     builder.Services.AddTransient<ICityRepository, CityRepository>();
 
-    builder.Services.AddTransient<IServiceCountryCore, ServiceCountryCore>();
-    builder.Services.AddTransient<IServiceCountryRepository, ServiceCountryRepository>();
-
-    builder.Services.AddTransient<IServiceCore, ServiceCore>();
+    builder.Services.AddTransient<IPatientsCore, PatientsCore>();
     builder.Services.AddTransient<IPatientsRepository, PatientsRepository>();
 
-    builder.Services.AddTransient<IProviderCore, ProviderCore>();
-    builder.Services.AddTransient<IProviderRepository, ProviderRepository>();
-
-    builder.Services.AddTransient<IProviderCustomFieldRepository, ProviderCustomFieldRepository>();
-    builder.Services.AddTransient<IProviderCustomFieldCore, ProviderCustomFieldCore>();
     #endregion
 
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
