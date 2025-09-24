@@ -22,9 +22,10 @@ namespace sst_database.sst_database.DbCore
         {
             try
             {
-                var data = _DbContext.Patients.AsEnumerable();
+                var data = _DbContext.Patients.Where(x => x.Enabled.HasValue && x.Enabled.Value).AsEnumerable();
 
-                if (!string.IsNullOrEmpty(document)) {
+                if (!string.IsNullOrEmpty(document))
+                {
                     data = data.Where(x => x.Document.Contains(document));
                 }
 

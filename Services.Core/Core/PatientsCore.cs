@@ -42,7 +42,7 @@ namespace sst_core.Core
                 if (Dbdata.Count() > 0)
                 {
                     Dbdata?.All(x =>
-                {
+                {                     
                     var servicesInfo = new PatientsResponse(x);
                     services.Add(servicesInfo);
                     return true;
