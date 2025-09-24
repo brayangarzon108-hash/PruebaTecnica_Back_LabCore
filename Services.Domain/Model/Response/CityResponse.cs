@@ -1,7 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-
-namespace StoreSample.Domain.Model.Dto
+﻿namespace StoreSample.Domain.Model.Dto
 {
     public class CityResponse
     {
@@ -10,7 +7,6 @@ namespace StoreSample.Domain.Model.Dto
             if (data != null)
             {
                 CityId = data.CityId;
-                IsoCode = data.IsoCode;
                 Name = data.Name;
                 UserId = data.UpdatedBy;
                 Enabled = data.Enabled;

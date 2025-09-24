@@ -88,7 +88,7 @@ namespace sst_core.Core
 
                 foreach (var pais in paises)
                 {
-                    var data = await _companyData.GetAllAny(pais.IsoCode);
+                    var data = await _companyData.GetAllAny(pais.CityId);
                     if (!data)
                     {
                         _companyData.UpsertDynamic(pais);

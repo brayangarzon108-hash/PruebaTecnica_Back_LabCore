@@ -9,6 +9,7 @@ namespace StoreSample.Domain.Model.Dto
         {
             this.Id = data.Id;
             this.TypeDocument = data.TypeDocument;
+            this.DescDocument = data.Id == 1 ? "CC" : data.Id == 2 ? "CE" : data.Id == 3 ? "TI" : "PP";
             this.Document = data.Document;
             this.Name = data.Name;
             this.LastName = data.LastName;
@@ -29,12 +30,13 @@ namespace StoreSample.Domain.Model.Dto
 
         public int Id { get; set; }
         public int TypeDocument { get; set; }
+        public string DescDocument { get; set; }
         public string Document { get; set; }
         public string Name { get; set; }
         public string LastName { get; set; }
         public string BirthDate { get; set; }
         public int CityId { get; set; }
-        public int Phone { get; set; }
+        public long Phone { get; set; }
         public string Email { get; set; }
         public string? CreatedBy { get; set; }
         public string CreatedDate { get; set; }

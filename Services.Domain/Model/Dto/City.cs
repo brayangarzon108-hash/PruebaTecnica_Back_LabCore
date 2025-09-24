@@ -11,13 +11,8 @@ namespace StoreSample.Domain.Model.Dto
         }
 
         [Key]
-        [Column("CityId")]
+        [Column("Id")]
         public int CityId { get; set; }
-
-        [Column("isocode")]
-        [Required]
-        [StringLength(5)]
-        public string IsoCode { get; set; }
 
         [Column("name")]
         [Required]

@@ -34,11 +34,11 @@ namespace sst_database.sst_database.DbCore
         /// Get list
         /// </summary>
         /// <returns>List<CatalogDto> </returns>
-        public async Task<bool> GetAllAny(string isoCode)
+        public async Task<bool> GetAllAny(int id)
         {
             try
             {
-                return await _DbContext.Cities.AnyAsync(x => x.IsoCode == isoCode);
+                return await _DbContext.Cities.AnyAsync(x => x.CityId == id);
             }
             catch (Exception ex)
             {
@@ -60,7 +60,6 @@ namespace sst_database.sst_database.DbCore
                 {
                     City insertDb = new City()
                     {
-                        IsoCode = input.IsoCode,
                         CityId = input.CityId,
                         Name = input.Name,
                         CreatedDate = DateTime.Now,

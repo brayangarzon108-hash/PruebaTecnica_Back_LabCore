@@ -14,7 +14,7 @@ namespace sst_database.sst_database.DbCore
         /// Get list
         /// </summary>
         /// <returns>List<CatalogDto> </returns>
-        Task<bool> GetAllAny(string isoCode);
+        Task<bool> GetAllAny(int id);
 
         /// <summary>
         /// Create or update 

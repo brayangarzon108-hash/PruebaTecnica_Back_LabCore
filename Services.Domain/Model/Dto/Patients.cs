@@ -40,7 +40,7 @@ namespace StoreSample.Domain.Model.Dto
         public int CityId { get; set; }
 
         [Column("Phone")]
-        public int Phone { get; set; }
+        public long Phone { get; set; }
         [Column("Email")]
         [Required]
         [StringLength(150)]

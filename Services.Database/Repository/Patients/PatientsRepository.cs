@@ -24,11 +24,11 @@ namespace sst_database.sst_database.DbCore
             {
                 var data = _DbContext.Patients.AsEnumerable();
 
-                if (string.IsNullOrEmpty(document)) {
+                if (!string.IsNullOrEmpty(document)) {
                     data = data.Where(x => x.Document.Contains(document));
                 }
 
-                return data.ToList();
+                return data.OrderByDescending(x => x.Id).ToList();
             }
             catch (Exception ex)
             {
@@ -68,6 +68,8 @@ namespace sst_database.sst_database.DbCore
                     Patients insertDb = new Patients()
                     {
                         Id = input.Id,
+                        TypeDocument = input.TypeDocument,
+                        Document = input.Document,
                         CityId = input.CityId,
                         LastName = input.LastName,
                         Name = input.Name,
@@ -98,7 +100,7 @@ namespace sst_database.sst_database.DbCore
                     _DbContext.SaveChanges();
                 }
 
-                return _DbContext.Patients.Where(x => x.Id == input.Id).Max(x => x.Id);
+                return _DbContext.Patients.Where(x => x.TypeDocument == input.TypeDocument && x.Document == input.Document).Max(x => x.Id);
             }
             catch (Exception ex)
             {

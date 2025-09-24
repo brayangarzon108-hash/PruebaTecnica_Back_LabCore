@@ -49,7 +49,7 @@ namespace services_backend.Controllers
             try
             {
                 var data = await _Core.Upsert(dataInfo);
-                return StatusCode(data.Status, data);
+                return Ok(data);
             }
             catch (Exception ex)
             {

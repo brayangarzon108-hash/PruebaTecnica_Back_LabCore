@@ -6,7 +6,7 @@ using StoreSample.Domain.Model.General;
 
 namespace services_backend.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [Authorize]
     public class CityController : ControllerBase
     {
@@ -25,8 +25,7 @@ namespace services_backend.Controllers
         /// <param name="input"></param>
         /// <returns>List<DynamicFieldModel></returns>
         [HttpGet]
-        [Route("GetAllCountry")]
-        public async Task<ActionResult<GeneralResponse>> GetAllCountry()
+        public async Task<ActionResult<GeneralResponse>> GetAllCity()
         {
             try
             {
@@ -46,8 +45,7 @@ namespace services_backend.Controllers
         /// <param name="dataInfo"></param>
         /// <returns>List<DynamicFieldModel></returns>
         [HttpGet]
-        [Route("UpsertCountry")]
-        public async Task<ActionResult<GeneralResponse>> UpsertCountry()
+        public async Task<ActionResult<GeneralResponse>> UpsertCity()
         {
             try
             {
